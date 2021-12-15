@@ -41,9 +41,9 @@ start();
 function initEdges() {
     var sidegeometry = new THREE.BoxGeometry(1, 400, 100);
     var sidematerial = new THREE.MeshPhongMaterial(
-	{color: 0x2222aa,
+	{color:0x00FF00,// 0x2222aa,
 	 specular: 0x333333,
-	 shininess: 5}
+	 shininess: 3}
     );
     var leftbox = new THREE.Mesh(sidegeometry, sidematerial);
     var topGeometry = new THREE.BoxGeometry(400, 1, 100);
@@ -196,7 +196,7 @@ function detectCollisions() {
 	    ball.y = paddle.y+paddle.height+ball.radius;
 	} else {
 	    game.lives--;
-	    game.score = 0;
+	    //game.score = 0;
 	    resetPaddle();
 	    game.state = "ready";
 	    updateStatus();
@@ -279,7 +279,9 @@ function initGame() {
 	    var material = new THREE.MeshPhongMaterial(
 		{color: new THREE.Color(randColor(),
 					randColor(),
-					randColor())
+					randColor()),
+        specular: 0x333333,
+        shininess: 1
 		});
 	    var object = new THREE.Mesh(geometry, material);
 	    blocks[i][j] = { status: 0,
@@ -294,9 +296,9 @@ function initGame() {
     var paddleGeometry = new THREE.BoxGeometry(paddle.width, paddle.height, 40);
     paddle.mesh = new THREE.Mesh(paddleGeometry, material);
     scene.add(paddle.mesh);
-    ball.mesh = new THREE.PointLight(0xffffff, 1, 200);
+    ball.mesh = new THREE.PointLight(0xFF6600, 1, 200);
     var ballGeometry = new THREE.SphereGeometry(ball.radius);
-    var ballMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
+    var ballMaterial = new THREE.MeshBasicMaterial({color: 0xFF0000});
     ball.mesh.add(new THREE.Mesh(ballGeometry, ballMaterial));
     scene.add(ball.mesh);
     game.state = "ready";
