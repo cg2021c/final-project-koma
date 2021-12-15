@@ -226,11 +226,11 @@ function detectCollisions() {
 
 function initKeys() {
     document.addEventListener("keydown", function(e) {
-	if (e.keyCode === 39)
+	if (e.keyCode === 39 || e.keyCode === 68)
 	    paddle.dir = 1;
-	else if (e.keyCode === 37)
+	else if (e.keyCode === 37 || e.keyCode === 65)
 	    paddle.dir = -1;
-	else if (e.keyCode === 32 && game.state === "ready") {
+	else if (e.keyCode === 32 || e.keyCode === 87 && game.state === "ready") {
 	    ball.velocity.x += paddle.dir * 25;
 	    if (ball.velocity.x > width)
 		ball.velocity.x = width;
@@ -243,7 +243,9 @@ function initKeys() {
 	}
     }, false);
     document.addEventListener("keyup", function(e) {
-	if ((e.keyCode === 39 && paddle.dir === 1) ||
+	if ((e.keyCode === 39 && paddle.dir === 1)||
+        (e.keyCode === 68 && paddle.dir === 1)||
+        (e.keyCode === 65 && paddle.dir === -1)||
 	    (e.keyCode === 37 && paddle.dir === -1))
     	    paddle.dir = 0;
     }, false);
