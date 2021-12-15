@@ -3,18 +3,18 @@
 var blocks = [],
     width = 400,
     height = 400,
-    ROWS = 16,
-    COLS = 5,
-    blockWidth = 80,
+    ROWS = 10,
+    COLS = 8,
+    blockWidth = 50,
     blockHeight = 10,
     renderer = null,
     scene = null,
     camera = null;
 
 var paddle = {
-    width: 80,
-    height: 10,
-    speed: 320,
+    width: 120,
+    height: 7,
+    speed: 350,
     x: 0,
     y: 0,    
     dir: 0,
@@ -24,7 +24,7 @@ var paddle = {
 var ball = {
     x: 0,
     y: 0,
-    radius: 7,
+    radius: 10,
     velocity: {x: 0, y: 250},
     mesh: null
 };
@@ -283,7 +283,7 @@ function initGame() {
 	}
     }
     var material = new THREE.MeshPhongMaterial({color: 0x00ff00});
-    var paddleGeometry = new THREE.BoxGeometry(paddle.width, paddle.height, 50);
+    var paddleGeometry = new THREE.BoxGeometry(paddle.width, paddle.height, 40);
     paddle.mesh = new THREE.Mesh(paddleGeometry, material);
     scene.add(paddle.mesh);
     ball.mesh = new THREE.PointLight(0xffffff, 1, 200);
