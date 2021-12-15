@@ -230,7 +230,13 @@ function initKeys() {
 	    paddle.dir = 1;
 	else if (e.keyCode === 37 || e.keyCode === 65)
 	    paddle.dir = -1;
-	else if (e.keyCode === 32 || e.keyCode === 87 && game.state === "ready") {
+	else if (e.keyCode === 32 && game.state === "ready") {
+	    ball.velocity.x += paddle.dir * 25;
+	    if (ball.velocity.x > width)
+		ball.velocity.x = width;
+	    game.state = "running";
+	}
+    else if (e.keyCode === 87 && game.state === "ready") {
 	    ball.velocity.x += paddle.dir * 25;
 	    if (ball.velocity.x > width)
 		ball.velocity.x = width;
@@ -284,7 +290,7 @@ function initGame() {
 	    scene.add(object);
 	}
     }
-    var material = new THREE.MeshPhongMaterial({color: 0x00ff00});
+    var material = new THREE.MeshPhongMaterial({color: 0xFFFF00});
     var paddleGeometry = new THREE.BoxGeometry(paddle.width, paddle.height, 40);
     paddle.mesh = new THREE.Mesh(paddleGeometry, material);
     scene.add(paddle.mesh);
@@ -298,7 +304,7 @@ function initGame() {
 }
 
 function randColor() {
-    return 0.3 + 0.7*Math.random();
+    return 0.2 + Math.random();
 }
 
 
