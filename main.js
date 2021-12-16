@@ -241,7 +241,7 @@ function detectCollisions() {
         ball.velocity.y = -ball.velocity.y;
         blocks[row][col].status = 1;
         scene.remove(blocks[row][col].object);
-        game.score++;
+        game.score+=10;
         game.blockCount--;
         updateStatus();
     }
@@ -273,7 +273,7 @@ function initKeys() {
 }
 
 function resetPaddle() {
-    paddle.x = width/2-paddle.width/2;
+    paddle.x = paddle.width;
     paddle.y = 0;
     paddle.mesh.position.x = paddle.x+paddle.width/2;
     paddle.mesh.position.y = paddle.height/2;
