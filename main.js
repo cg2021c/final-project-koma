@@ -1,19 +1,12 @@
-//"use strict";
+"use strict";
 
 var blocks = [],
-    width = 700,
+    width = 400,
     height = 400,
-<<<<<<< HEAD
-    ROWS = 5, //jumlah baris blok
-    COLS = 10, //jumlah kolom blok
-    blockWidth = 100, //lebar blok
-    blockHeight = 20, //tinggi blok
-=======
     ROWS = 10,
     COLS = 8,
     blockWidth = 50,
     blockHeight = 10,
->>>>>>> 50c41780a67ce9b01d1d0adec5c7ca3c7f74ef3b
     renderer = null,
     scene = null,
     camera = null;
@@ -53,14 +46,14 @@ function initEdges() {
 	 shininess: 3}
     );
     var leftbox = new THREE.Mesh(sidegeometry, sidematerial);
-    var topGeometry = new THREE.BoxGeometry(1000, 1, 100);
+    var topGeometry = new THREE.BoxGeometry(400, 1, 100);
     var rightbox = new THREE.Mesh(sidegeometry, sidematerial);
-    var backbox = new THREE.Mesh(new THREE.BoxGeometry(1000, 400, 1),
+    var backbox = new THREE.Mesh(new THREE.BoxGeometry(400, 400, 1),
 				 sidematerial);
     var botbox = new THREE.Mesh(topGeometry, sidematerial);
     var topbox = new THREE.Mesh(topGeometry, sidematerial);
-    leftbox.position.set(-300, 200, 0);
-    rightbox.position.set(700, 200, 0);
+    leftbox.position.set(-1, 200, 0);
+    rightbox.position.set(width, 200, 0);
     backbox.position.set(200, 200, -49);
     botbox.position.set(200, 0, 0);
     topbox.position.set(200, 400, 0);
@@ -122,32 +115,30 @@ function start() {
     initKeys();
     var time = 0;
     function mainLoop(timestamp) {
-        requestAnimationFrame(mainLoop);
-        renderer.render(scene, camera);
-        var delta = timestamp - time;
-        time = timestamp;
-        var paddleDelta = paddle.speed*delta/1000;
-        //perpindahan posisi paddle
-        if ((paddle.dir === -1 && paddle.x > paddleDelta-300) ||
-            (paddle.dir === 1 && paddle.x + paddleDelta + paddle.width < width))
-            paddle.x += paddleDelta * paddle.dir;
-        //perpindahan posisi ball
-        if (game.state === "running") {
-            ball.x += ball.velocity.x * delta / 1000;
-            ball.y += ball.velocity.y * delta / 1000;
-            detectCollisions();
-        } else  {
-            ball.x = paddle.x+paddle.width/2;
-            ball.y = paddle.y+paddle.height+ball.radius;
-        } 
-        if (ball) {
-            ball.mesh.position.x = ball.x;
-            ball.mesh.position.y = ball.y;
-        }
-        if (paddle) {
-            paddle.mesh.position.x = paddle.x+paddle.width/2
-            paddle.mesh.position.y = paddle.y+paddle.height/2;
-        }
+	requestAnimationFrame(mainLoop);
+	renderer.render(scene, camera);
+	var delta = timestamp - time;
+	time = timestamp;
+	var paddleDelta = paddle.speed*delta/1000;
+    	if ((paddle.dir === -1 && paddle.x > paddleDelta) ||
+    	    (paddle.dir === 1 && paddle.x + paddleDelta + paddle.width < width))
+    	    paddle.x += paddleDelta * paddle.dir;
+	if (game.state === "running") {
+	    ball.x += ball.velocity.x * delta / 1000;
+    	    ball.y += ball.velocity.y * delta / 1000;
+    	    detectCollisions();
+	} else  {
+    	    ball.x = paddle.x+paddle.width/2;
+    	    ball.y = paddle.y+paddle.height+ball.radius;
+    	} 
+	if (ball) {
+	    ball.mesh.position.x = ball.x;
+	    ball.mesh.position.y = ball.y;
+	}
+	if (paddle) {
+	    paddle.mesh.position.x = paddle.x+paddle.width/2
+	    paddle.mesh.position.y = paddle.y+paddle.height/2;
+	}
     }
     mainLoop();
 }
@@ -155,13 +146,13 @@ function start() {
 function updateStatus() {
     var s = document.getElementById("status");
     if (game.lives === 0) {
-        drawText("GAME OVER");
-        resetGame();
-        game.state = "over";
+	drawText("GAME OVER");
+	resetGame();
+	game.state = "over";
     } else if (game.blockCount === 0) {
-        drawText("YOU WIN");
-        resetGame();
-        game.state = "over";
+	drawText("YOU WIN");
+	resetGame();
+	game.state = "over";
     } 
     s.innerHTML = 'Score: ' + game.score + ' Lives: ' + game.lives;
 }
@@ -173,27 +164,27 @@ function resetGame() {
     scene.remove(paddle.mesh);
     scene.remove(ball.mesh);
     for (var i = 0; i < ROWS; i++)
-        for (var j = 0; j < COLS; j++)
-            scene.remove(blocks[i][j].object);
+	for (var j = 0; j < COLS; j++)
+	    scene.remove(blocks[i][j].object);
     initGame();
 }
 
 function detectCollisions() {
     // walls
-    if (ball.x+ball.radius > width) {  //wall kanan
-        ball.velocity.x = -ball.velocity.x;
-        ball.x = width-ball.radius;
-        return;
+    if (ball.x+ball.radius > width) {
+	ball.velocity.x = -ball.velocity.x;
+	ball.x = width-ball.radius;
+	return;
     }
-    if (ball.x-ball.radius < -300) { //wall kiri
-        ball.velocity.x = -ball.velocity.x;
-        ball.x = -300 + ball.radius;
-        return;
+    if (ball.x-ball.radius < 0) {
+	ball.velocity.x = -ball.velocity.x;
+	ball.x = ball.radius;
+	return;
     }
-    if (ball.y+ball.radius > height) { //wall atas
-        ball.velocity.y = -ball.velocity.y;
-        ball.y = height-ball.radius;
-        return;
+    if (ball.y+ball.radius > height) {
+	ball.velocity.y = -ball.velocity.y;
+	ball.y = height-ball.radius;
+	return;
     }
     
     // paddle
@@ -215,22 +206,21 @@ function detectCollisions() {
     
     // blocks
     if (ball.y+ball.radius < height-ROWS*blockHeight)
-	    return; 
+	return;
     var col = Math.floor((ball.x-ball.radius)/blockWidth);
     var row = Math.floor((height-ball.y-ball.radius)/blockHeight);
-    console.log(col, row);
-    if (row < 0 || col < -3 || blocks[row][col].status === 1)
-	    return;
+    if (row < 0 || col < 0 || blocks[row][col].status === 1)
+	return;
     var x = col*blockWidth;
     var y = height-row*blockHeight;
     if (ball.x+ball.radius >= x && ball.x-ball.radius < x+blockWidth
 	&& ball.y+ball.radius > y-blockHeight && ball.y-ball.radius < y) {
-        ball.velocity.y = -ball.velocity.y;
-        blocks[row][col].status = 1;
-        scene.remove(blocks[row][col].object);
-        game.score++;
-        game.blockCount--;
-        updateStatus();
+	ball.velocity.y = -ball.velocity.y;
+	blocks[row][col].status = 1;
+	scene.remove(blocks[row][col].object);
+	game.score++;
+	game.blockCount--;
+	updateStatus();
     }
 }
 
@@ -284,23 +274,6 @@ function resetPaddle() {
 function initGame() {
     var geometry = new THREE.BoxGeometry(blockWidth, blockHeight, 100);
     for (var i = 0; i < ROWS; i++) {
-<<<<<<< HEAD
-        blocks[i] = [];
-        for (var j = -3; j < COLS-3; j++) {
-            var material = new THREE.MeshPhongMaterial(
-            {color: new THREE.Color(randColor(),
-                        randColor(),
-                        randColor())
-            });
-            var object = new THREE.Mesh(geometry, material);
-            blocks[i][j] = { status: 0,
-                    object: object
-                };
-            object.position.set(j*blockWidth+blockWidth/2,
-                    height-(i*blockHeight+blockHeight/2), 0);
-            scene.add(object);
-        }
-=======
 	blocks[i] = [];
 	for (var j = 0; j < COLS; j++) {
 	    var material = new THREE.MeshPhongMaterial(
@@ -318,7 +291,6 @@ function initGame() {
 				height-(i*blockHeight+blockHeight/2), 0);
 	    scene.add(object);
 	}
->>>>>>> 50c41780a67ce9b01d1d0adec5c7ca3c7f74ef3b
     }
     var material = new THREE.MeshPhongMaterial({color: 0xFFFF00});
     var paddleGeometry = new THREE.BoxGeometry(paddle.width, paddle.height, 40);
@@ -336,5 +308,3 @@ function initGame() {
 function randColor() {
     return 0.2 + Math.random();
 }
-
-
