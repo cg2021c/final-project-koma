@@ -3,18 +3,25 @@
 var blocks = [],
     width = 700,
     height = 400,
+<<<<<<< HEAD
     ROWS = 5, //jumlah baris blok
     COLS = 10, //jumlah kolom blok
     blockWidth = 100, //lebar blok
     blockHeight = 20, //tinggi blok
+=======
+    ROWS = 10,
+    COLS = 8,
+    blockWidth = 50,
+    blockHeight = 10,
+>>>>>>> 50c41780a67ce9b01d1d0adec5c7ca3c7f74ef3b
     renderer = null,
     scene = null,
     camera = null;
 
 var paddle = {
-    width: 80,
-    height: 10,
-    speed: 320,
+    width: 120,
+    height: 7,
+    speed: 350,
     x: 0,
     y: 0,    
     dir: 0,
@@ -24,7 +31,7 @@ var paddle = {
 var ball = {
     x: 0,
     y: 0,
-    radius: 7,
+    radius: 10,
     velocity: {x: 0, y: 250},
     mesh: null
 };
@@ -41,9 +48,9 @@ start();
 function initEdges() {
     var sidegeometry = new THREE.BoxGeometry(1, 400, 100);
     var sidematerial = new THREE.MeshPhongMaterial(
-	{color: 0x2222aa,
+	{color:0x00FF00,// 0x2222aa,
 	 specular: 0x333333,
-	 shininess: 5}
+	 shininess: 3}
     );
     var leftbox = new THREE.Mesh(sidegeometry, sidematerial);
     var topGeometry = new THREE.BoxGeometry(1000, 1, 100);
@@ -198,7 +205,7 @@ function detectCollisions() {
 	    ball.y = paddle.y+paddle.height+ball.radius;
 	} else {
 	    game.lives--;
-	    game.score = 0;
+	    //game.score = 0;
 	    resetPaddle();
 	    game.state = "ready";
 	    updateStatus();
@@ -229,11 +236,17 @@ function detectCollisions() {
 
 function initKeys() {
     document.addEventListener("keydown", function(e) {
-	if (e.keyCode === 39)
+	if (e.keyCode === 39 || e.keyCode === 68)
 	    paddle.dir = 1;
-	else if (e.keyCode === 37)
+	else if (e.keyCode === 37 || e.keyCode === 65)
 	    paddle.dir = -1;
 	else if (e.keyCode === 32 && game.state === "ready") {
+	    ball.velocity.x += paddle.dir * 25;
+	    if (ball.velocity.x > width)
+		ball.velocity.x = width;
+	    game.state = "running";
+	}
+    else if (e.keyCode === 87 && game.state === "ready") {
 	    ball.velocity.x += paddle.dir * 25;
 	    if (ball.velocity.x > width)
 		ball.velocity.x = width;
@@ -246,7 +259,9 @@ function initKeys() {
 	}
     }, false);
     document.addEventListener("keyup", function(e) {
-	if ((e.keyCode === 39 && paddle.dir === 1) ||
+	if ((e.keyCode === 39 && paddle.dir === 1)||
+        (e.keyCode === 68 && paddle.dir === 1)||
+        (e.keyCode === 65 && paddle.dir === -1)||
 	    (e.keyCode === 37 && paddle.dir === -1))
     	    paddle.dir = 0;
     }, false);
@@ -269,6 +284,7 @@ function resetPaddle() {
 function initGame() {
     var geometry = new THREE.BoxGeometry(blockWidth, blockHeight, 100);
     for (var i = 0; i < ROWS; i++) {
+<<<<<<< HEAD
         blocks[i] = [];
         for (var j = -3; j < COLS-3; j++) {
             var material = new THREE.MeshPhongMaterial(
@@ -284,14 +300,33 @@ function initGame() {
                     height-(i*blockHeight+blockHeight/2), 0);
             scene.add(object);
         }
+=======
+	blocks[i] = [];
+	for (var j = 0; j < COLS; j++) {
+	    var material = new THREE.MeshPhongMaterial(
+		{color: new THREE.Color(randColor(),
+					randColor(),
+					randColor()),
+        specular: 0x333333,
+        shininess: 1
+		});
+	    var object = new THREE.Mesh(geometry, material);
+	    blocks[i][j] = { status: 0,
+			     object: object
+			   };
+	    object.position.set(j*blockWidth+blockWidth/2,
+				height-(i*blockHeight+blockHeight/2), 0);
+	    scene.add(object);
+	}
+>>>>>>> 50c41780a67ce9b01d1d0adec5c7ca3c7f74ef3b
     }
-    var material = new THREE.MeshPhongMaterial({color: 0x00ff00});
-    var paddleGeometry = new THREE.BoxGeometry(paddle.width, paddle.height, 50);
+    var material = new THREE.MeshPhongMaterial({color: 0xFFFF00});
+    var paddleGeometry = new THREE.BoxGeometry(paddle.width, paddle.height, 40);
     paddle.mesh = new THREE.Mesh(paddleGeometry, material);
     scene.add(paddle.mesh);
-    ball.mesh = new THREE.PointLight(0xffffff, 1, 200);
+    ball.mesh = new THREE.PointLight(0xFF6600, 1, 200);
     var ballGeometry = new THREE.SphereGeometry(ball.radius);
-    var ballMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
+    var ballMaterial = new THREE.MeshBasicMaterial({color: 0xFF0000});
     ball.mesh.add(new THREE.Mesh(ballGeometry, ballMaterial));
     scene.add(ball.mesh);
     game.state = "ready";
@@ -299,7 +334,7 @@ function initGame() {
 }
 
 function randColor() {
-    return 0.3 + 0.7*Math.random();
+    return 0.2 + Math.random();
 }
 
 
